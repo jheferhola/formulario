@@ -32,20 +32,53 @@
 
         /* Efecto cristal */
         .glass-card {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.88);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+        }
+
+        /* ✨ EFECTO BRILLO DE GUÍA PASO A PASO (FOCUS GLOW) */
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25), 0 0 18px rgba(139, 92, 246, 0.35);
+                border-color: #6366f1;
+            }
+            50% {
+                box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.4), 0 0 26px rgba(139, 92, 246, 0.55);
+                border-color: #8b5cf6;
+            }
+        }
+
+        .step-highlight {
+            animation: pulseGlow 2s infinite ease-in-out !important;
+            background-color: #ffffff !important;
+            transform: translateY(-1px);
+        }
+
+        /* Brillo especial para el botón cuando todo está listo */
+        @keyframes btnReadyGlow {
+            0%, 100% {
+                box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.3), 0 10px 25px rgba(99, 102, 241, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 0 7px rgba(16, 185, 129, 0.45), 0 14px 32px rgba(139, 92, 246, 0.7);
+            }
+        }
+        .btn-ready-glow {
+            animation: btnReadyGlow 1.8s infinite ease-in-out !important;
         }
 
         /* Estados de validación */
         .input-error {
             border-color: #f43f5e !important;
             background-color: #fff1f2 !important;
-            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+            box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.15) !important;
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both !important;
         }
         .input-success {
             border-color: #10b981 !important;
+            background-color: rgba(236, 253, 245, 0.45) !important;
         }
 
         @keyframes shake {
@@ -124,23 +157,26 @@
             <!-- VISTA 1: FORMULARIO -->
             <div id="form-container" class="p-6 sm:p-10 transition-opacity duration-300">
                 <!-- Cabecera -->
-                <div class="text-center mb-8">
-                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/30 mb-4 transform transition hover:scale-105 hover:rotate-3">
-                        <i class="fa-solid fa-paper-plane text-2xl"></i>
+                <div class="text-center mb-6">
+                    <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/30 mb-3 transform transition hover:scale-105 hover:rotate-3">
+                        <i class="fa-solid fa-paper-plane text-xl"></i>
                     </div>
                     <h1 class="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">¡Hablemos!</h1>
-                    <p class="text-slate-500 text-sm sm:text-base mt-1.5">Cuéntanos tu opinión o consulta, te responderemos pronto</p>
+                    <p id="guia-paso" class="text-indigo-600 font-medium text-xs sm:text-sm mt-1.5 flex items-center justify-center gap-1.5">
+                        <span class="inline-block w-2 h-2 rounded-full bg-indigo-600 animate-ping"></span>
+                        <span id="guia-texto">Paso 1 de 4: Escribe tu nombre completo</span>
+                    </p>
                 </div>
 
                 <!-- Alerta de error general -->
-                <div id="error-banner" class="hidden mb-6 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 text-sm flex items-center gap-2.5 animate-pulse">
+                <div id="error-banner" class="hidden mb-5 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 text-sm flex items-center gap-2.5">
                     <i class="fa-solid fa-circle-exclamation text-base"></i>
                     <span id="error-banner-text">Por favor revisa los campos marcados.</span>
                 </div>
 
                 <form id="contactForm" class="space-y-5" novalidate>
                     
-                    <!-- Campo: Nombre -->
+                    <!-- Campo 1: Nombre -->
                     <div class="relative group">
                         <div class="relative">
                             <input 
@@ -148,11 +184,12 @@
                                 id="nombre" 
                                 name="Nombre"
                                 placeholder=" "
-                                class="peer w-full pl-11 pr-10 pt-5 pb-2 bg-white/90 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition-all"
+                                autocomplete="name"
+                                class="peer w-full pl-11 pr-10 pt-5 pb-2 bg-white/80 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none transition-all duration-300"
                                 required
                             >
                             <label for="nombre" class="absolute left-11 top-2 text-[11px] font-semibold text-indigo-600 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:text-slate-400 peer-focus:top-2 peer-focus:text-[11px] peer-focus:font-semibold peer-focus:text-indigo-600 pointer-events-none">
-                                Nombre completo
+                                1. Nombre completo
                             </label>
                             <i class="fa-solid fa-user absolute left-4 top-4 text-slate-400 peer-focus:text-indigo-600 transition-colors"></i>
                             <i id="nombre-check" class="fa-solid fa-circle-check absolute right-3.5 top-4 text-emerald-500 hidden"></i>
@@ -162,7 +199,7 @@
                         </p>
                     </div>
 
-                    <!-- Campo: Teléfono -->
+                    <!-- Campo 2: Teléfono -->
                     <div class="relative group">
                         <div class="relative">
                             <input 
@@ -170,11 +207,12 @@
                                 id="telefono" 
                                 name="Numero Telf."
                                 placeholder=" "
-                                class="peer w-full pl-11 pr-10 pt-5 pb-2 bg-white/90 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition-all"
+                                autocomplete="tel"
+                                class="peer w-full pl-11 pr-10 pt-5 pb-2 bg-white/80 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none transition-all duration-300"
                                 required
                             >
                             <label for="telefono" class="absolute left-11 top-2 text-[11px] font-semibold text-indigo-600 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:text-slate-400 peer-focus:top-2 peer-focus:text-[11px] peer-focus:font-semibold peer-focus:text-indigo-600 pointer-events-none">
-                                Número de teléfono (Ej: 987654321)
+                                2. Número de teléfono (Ej: 987654321)
                             </label>
                             <i class="fa-solid fa-phone absolute left-4 top-4 text-slate-400 peer-focus:text-indigo-600 transition-colors"></i>
                             <i id="telefono-check" class="fa-solid fa-circle-check absolute right-3.5 top-4 text-emerald-500 hidden"></i>
@@ -184,7 +222,7 @@
                         </p>
                     </div>
 
-                    <!-- Campo: Correo -->
+                    <!-- Campo 3: Correo -->
                     <div class="relative group">
                         <div class="relative">
                             <input 
@@ -192,11 +230,12 @@
                                 id="correo" 
                                 name="Correo"
                                 placeholder=" "
-                                class="peer w-full pl-11 pr-10 pt-5 pb-2 bg-white/90 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition-all"
+                                autocomplete="email"
+                                class="peer w-full pl-11 pr-10 pt-5 pb-2 bg-white/80 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none transition-all duration-300"
                                 required
                             >
                             <label for="correo" class="absolute left-11 top-2 text-[11px] font-semibold text-indigo-600 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:text-slate-400 peer-focus:top-2 peer-focus:text-[11px] peer-focus:font-semibold peer-focus:text-indigo-600 pointer-events-none">
-                                Correo electrónico
+                                3. Correo electrónico
                             </label>
                             <i class="fa-solid fa-envelope absolute left-4 top-4 text-slate-400 peer-focus:text-indigo-600 transition-colors"></i>
                             <i id="correo-check" class="fa-solid fa-circle-check absolute right-3.5 top-4 text-emerald-500 hidden"></i>
@@ -206,7 +245,7 @@
                         </p>
                     </div>
 
-                    <!-- Campo: Comentario -->
+                    <!-- Campo 4: Comentario -->
                     <div class="relative">
                         <div class="relative">
                             <textarea 
@@ -214,11 +253,11 @@
                                 name="Comentario"
                                 rows="4"
                                 placeholder=" "
-                                class="peer w-full pl-11 pr-4 pt-6 pb-2 bg-white/90 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition-all resize-none"
+                                class="peer w-full pl-11 pr-4 pt-6 pb-2 bg-white/80 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none transition-all duration-300 resize-none"
                                 required
                             ></textarea>
                             <label for="comentario" class="absolute left-11 top-2 text-[11px] font-semibold text-indigo-600 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:text-slate-400 peer-focus:top-2 peer-focus:text-[11px] peer-focus:font-semibold peer-focus:text-indigo-600 pointer-events-none">
-                                Escribe tu comentario aquí...
+                                4. Escribe tu comentario aquí...
                             </label>
                             <i class="fa-solid fa-comment-dots absolute left-4 top-4 text-slate-400 peer-focus:text-indigo-600 transition-colors"></i>
                         </div>
@@ -241,10 +280,10 @@
                     <button 
                         type="submit" 
                         id="btn-enviar"
-                        class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold text-sm shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
+                        class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold text-sm shadow-lg shadow-indigo-500/30 transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
                     >
                         <span>Enviar mensaje</span>
-                        <i class="fa-solid fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
                     </button>
                 </form>
             </div>
@@ -298,6 +337,74 @@
         const errorBannerText = document.getElementById('error-banner-text');
         const contadorTexto = document.getElementById('contador-texto');
         const barraProgreso = document.getElementById('barra-progreso');
+        const guiaTexto = document.getElementById('guia-texto');
+
+        // Estado de validez de cada paso
+        const estadoPasos = {
+            nombre: false,
+            telefono: false,
+            correo: false,
+            comentario: false
+        };
+
+        // ✨ CONTROLADOR DEL BRILLO GUIADO PASO A PASO
+        function actualizarGuiaVisual(autoEnfocar = false) {
+            const campos = [nombre, telefono, correo, comentario];
+            // Quitar el brillo de todos primero
+            campos.forEach(c => c.classList.remove('step-highlight'));
+            btnEnviar.classList.remove('btn-ready-glow');
+
+            if (!estadoPasos.nombre) {
+                nombre.classList.add('step-highlight');
+                guiaTexto.textContent = 'Paso 1 de 4: Escribe tu nombre completo';
+                if (autoEnfocar) nombre.focus();
+            } else if (!estadoPasos.telefono) {
+                telefono.classList.add('step-highlight');
+                guiaTexto.textContent = 'Paso 2 de 4: Ingresa tu número de teléfono';
+                if (autoEnfocar) telefono.focus();
+            } else if (!estadoPasos.correo) {
+                correo.classList.add('step-highlight');
+                guiaTexto.textContent = 'Paso 3 de 4: Escribe tu correo electrónico';
+                if (autoEnfocar) correo.focus();
+            } else if (!estadoPasos.comentario) {
+                comentario.classList.add('step-highlight');
+                guiaTexto.textContent = 'Paso 4 de 4: Cuéntanos tu opinión (mín. 10 palabras)';
+                if (autoEnfocar) comentario.focus();
+            } else {
+                btnEnviar.classList.add('btn-ready-glow');
+                guiaTexto.textContent = '¡Todo listo! Presiona "Enviar mensaje"';
+            }
+        }
+
+        // Al cargar la página, iluminar y enfocar el primer campo
+        window.addEventListener('DOMContentLoaded', () => {
+            actualizarGuiaVisual(true);
+        });
+
+        // Permitir saltar al siguiente campo al presionar Enter si el actual es válido
+        function manejarEnter(e, esValido, siguienteCampo) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (esValido && siguienteCampo) {
+                    siguienteCampo.focus();
+                    actualizarGuiaVisual(false);
+                }
+            }
+        }
+
+        nombre.addEventListener('keydown', (e) => manejarEnter(e, estadoPasos.nombre, telefono));
+        telefono.addEventListener('keydown', (e) => manejarEnter(e, estadoPasos.telefono, correo));
+        correo.addEventListener('keydown', (e) => manejarEnter(e, estadoPasos.correo, comentario));
+
+        // Si el usuario hace clic manualmente en cualquier campo, mover el brillo allí
+        [nombre, telefono, correo, comentario].forEach(campo => {
+            campo.addEventListener('focus', () => {
+                [nombre, telefono, correo, comentario].forEach(c => c.classList.remove('step-highlight'));
+                if (!campo.classList.contains('input-error')) {
+                    campo.classList.add('step-highlight');
+                }
+            });
+        });
 
         // Barra de progreso y contador de palabras
         comentario.addEventListener('input', () => {
@@ -320,12 +427,27 @@
                 contadorTexto.classList.remove('text-emerald-600');
             }
             validarComentario(false);
+            actualizarGuiaVisual(false);
         });
 
         // Listeners de validación en vivo
-        nombre.addEventListener('input', () => validarNombre(false));
-        telefono.addEventListener('input', () => validarTelefono(false));
-        correo.addEventListener('input', () => validarCorreo(false));
+        nombre.addEventListener('input', () => {
+            validarNombre(false);
+            actualizarGuiaVisual(false);
+        });
+        telefono.addEventListener('input', () => {
+            validarTelefono(false);
+            actualizarGuiaVisual(false);
+        });
+        correo.addEventListener('input', () => {
+            validarCorreo(false);
+            actualizarGuiaVisual(false);
+        });
+
+        // Cuando el usuario sale de un campo (blur), si está completo, salta el brillo al siguiente
+        nombre.addEventListener('blur', () => { if (estadoPasos.nombre) actualizarGuiaVisual(false); });
+        telefono.addEventListener('blur', () => { if (estadoPasos.telefono) actualizarGuiaVisual(false); });
+        correo.addEventListener('blur', () => { if (estadoPasos.correo) actualizarGuiaVisual(false); });
 
         function actualizarEstadoVisual(input, checkIcon, errorMsg, esValido, vacio, forzar) {
             if (vacio && !forzar) {
@@ -335,8 +457,8 @@
                 return false;
             }
             if (!esValido) {
+                input.classList.remove('step-highlight', 'input-success');
                 input.classList.add('input-error');
-                input.classList.remove('input-success');
                 if (checkIcon) checkIcon.classList.add('hidden');
                 errorMsg.classList.remove('hidden');
                 return false;
@@ -351,7 +473,7 @@
         function validarNombre(forzar = false) {
             const valor = nombre.value.trim();
             const regex = /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]{3,}$/;
-            return actualizarEstadoVisual(
+            estadoPasos.nombre = actualizarEstadoVisual(
                 nombre,
                 document.getElementById('nombre-check'),
                 document.getElementById('nombre-error'),
@@ -359,16 +481,16 @@
                 valor === '',
                 forzar
             );
+            return estadoPasos.nombre;
         }
 
         function validarTelefono(forzar = false) {
             const valor = telefono.value.trim();
-            // Acepta dígitos, espacios, guiones o signo + al inicio (ej: +51 987654321)
             const soloDigitos = valor.replace(/\D/g, '');
             const regexFormato = /^[+]?[0-9\s-]{7,18}$/;
             const esValido = regexFormato.test(valor) && soloDigitos.length >= 7 && soloDigitos.length <= 15;
             
-            return actualizarEstadoVisual(
+            estadoPasos.telefono = actualizarEstadoVisual(
                 telefono,
                 document.getElementById('telefono-check'),
                 document.getElementById('telefono-error'),
@@ -376,12 +498,13 @@
                 valor === '',
                 forzar
             );
+            return estadoPasos.telefono;
         }
 
         function validarCorreo(forzar = false) {
             const valor = correo.value.trim();
             const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return actualizarEstadoVisual(
+            estadoPasos.correo = actualizarEstadoVisual(
                 correo,
                 document.getElementById('correo-check'),
                 document.getElementById('correo-error'),
@@ -389,12 +512,13 @@
                 valor === '',
                 forzar
             );
+            return estadoPasos.correo;
         }
 
         function validarComentario(forzar = false) {
             const valor = comentario.value.trim();
             const palabras = valor.split(/\s+/).filter(p => p.length > 0);
-            return actualizarEstadoVisual(
+            estadoPasos.comentario = actualizarEstadoVisual(
                 comentario,
                 null,
                 document.getElementById('comentario-error'),
@@ -402,6 +526,7 @@
                 valor === '',
                 forzar
             );
+            return estadoPasos.comentario;
         }
 
         function mostrarErrorGeneral(texto) {
@@ -422,11 +547,16 @@
 
             if (!v1 || !v2 || !v3 || !v4) {
                 mostrarErrorGeneral('Por favor completa correctamente todos los campos.');
+                // Enfocar el primer campo que tenga error
+                if (!v1) nombre.focus();
+                else if (!v2) telefono.focus();
+                else if (!v3) correo.focus();
+                else if (!v4) comentario.focus();
                 return;
             }
 
-            // Estado de carga en el botón
             btnEnviar.disabled = true;
+            btnEnviar.classList.remove('btn-ready-glow');
             btnEnviar.classList.add('opacity-80', 'cursor-not-allowed');
             btnEnviar.innerHTML = '<div class="spinner"></div> <span>Enviando...</span>';
 
@@ -446,7 +576,6 @@
                     body: JSON.stringify(datos)
                 });
 
-                // Transición suave a la pantalla de éxito
                 formContainer.classList.add('hidden');
                 successContainer.classList.remove('hidden');
 
@@ -463,6 +592,11 @@
         // Botón para volver a enviar otro mensaje
         btnNuevoMensaje.addEventListener('click', () => {
             form.reset();
+            estadoPasos.nombre = false;
+            estadoPasos.telefono = false;
+            estadoPasos.correo = false;
+            estadoPasos.comentario = false;
+
             contadorTexto.textContent = '0 / 10 palabras';
             contadorTexto.classList.add('text-slate-400');
             contadorTexto.classList.remove('text-emerald-600');
@@ -470,11 +604,12 @@
             barraProgreso.classList.add('bg-amber-400');
             barraProgreso.classList.remove('bg-emerald-500');
             
-            [nombre, telefono, correo, comentario].forEach(el => el.classList.remove('input-success', 'input-error'));
+            [nombre, telefono, correo, comentario].forEach(el => el.classList.remove('input-success', 'input-error', 'step-highlight'));
             ['nombre-check', 'telefono-check', 'correo-check'].forEach(id => document.getElementById(id).classList.add('hidden'));
 
             successContainer.classList.add('hidden');
             formContainer.classList.remove('hidden');
+            actualizarGuiaVisual(true);
         });
     </script>
 </body>
