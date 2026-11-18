@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contáctanos - Envía tu opinión</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* Animación de fondo con esferas flotantes */
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob {
+            animation: blob 8s infinite alternate ease-in-out;
+        }
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+            animation-delay: 4s;
+        }
+
+        /* Efecto cristal */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+        }
+
+        /* Estados de validación */
+        .input-error {
+            border-color: #f43f5e !important;
+            background-color: #fff1f2 !important;
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        .input-success {
+            border-color: #10b981 !important;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        /* Animación del Check de éxito */
+        .checkmark-circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 2;
+            stroke-miterlimit: 10;
+            stroke: #10b981;
+            fill: none;
+            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+        .checkmark {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            display: block;
+            stroke-width: 3;
+            stroke: #fff;
+            stroke-miterlimit: 10;
+            margin: 0 auto;
+            box-shadow: inset 0px 0px 0px #10b981;
+            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+        }
+        .checkmark-check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+        }
+        @keyframes stroke {
+            100% { stroke-dashoffset: 0; }
+        }
+        @keyframes scale {
+            0%, 100% { transform: none; }
+            50% { transform: scale3d(1.1, 1.1, 1); }
+        }
+        @keyframes fill {
+            100% { box-shadow: inset 0px 0px 0px 40px #10b981; }
+        }
+
+        /* Spinner de carga */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2.5px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-900 relative overflow-x-hidden flex items-center justify-center p-4 sm:p-6">
+
+    <!-- Fondo decorativo animado -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute -top-24 -left-24 w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob"></div>
+        <div class="absolute top-1/3 -right-24 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob animation-delay-2000"></div>
+        <div class="absolute -bottom-32 left-1/3 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob animation-delay-4000"></div>
+    </div>
+
+    <!-- Contenedor Principal -->
+    <div class="w-full max-w-lg relative z-10">
+        <div class="glass-card rounded-3xl shadow-2xl overflow-hidden transition-all duration-500">
+            
+            <!-- VISTA 1: FORMULARIO -->
+            <div id="form-container" class="p-6 sm:p-10 transition-opacity duration-300">
+                <!-- Cabecera -->
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/30 mb-4 transform transition hover:scale-105 hover:rotate-3">
+                        <i class="fa-solid fa-paper-plane text-2xl"></i>
+                    </div>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">¡Hablemos!</h1>
+                    <p class="text-slate-500 text-sm sm:text-base mt-1.5">Cuéntanos tu opinión o consulta, te responderemos pronto</p>
+                </div>
+
+                <!-- Alerta de error general -->
+                <div id="error-banner" class="hidden mb-6 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 text-sm flex items-center gap-2.5 animate-pulse">
+                    <i class="fa-solid fa-circle-exclamation text-base"></i>
+                    <span id="error-banner-text">Por favor revisa los campos marcados.</span>
+                </div>
+
+                <form id="contactForm" class="space-y-5" novalidate>
+                    
+                    <!-- Campo: Nombre -->
+                    <div class="relative group">
+                        <div class="relative">
+                            <input 
+                                type="text" 
+                                id="nombre" 
+                                name="Nombre"
+                                placeholder=" "
+                                class="peer w-full pl-11 pr-10 pt-5 pb-2 bg-white/90 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition-all"
+                                required
+                            >
+                            <label for="nombre" class="absolute left-11 top-2 text-[11px] font-semibold text-indigo-600 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:text-slate-400 peer-focus:top-2 peer-focus:text-[11px] peer-focus:font-semibold peer-focus:text-indigo-600 pointer-events-none">
+                                Nombre completo
+                            </label>
+                            <i class="fa-solid fa-user absolute left-4 top-4 text-slate-400 peer-focus:text-indigo-600 transition-colors"></i>
+                            <i id="nombre-check" class="fa-solid fa-circle-check absolute right-3.5 top-4 text-emerald-500 hidden"></i>
+                        </div>
+                        <p id="nombre-error" class="mt-1.5 text-xs text-rose-500 hidden flex items-center gap-1">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Ingresa tu nombre real (mínimo 3 letras)
+                        </p>
+                    </div>
+
+                    <!-- Campo: Teléfono -->
+                    <div class="relative group">
+                        <div class="relative">
+                            <input 
+                                type="tel" 
+                                id="telefono" 
+                                name="Numero Telf."
+                                placeholder=" "
+                                class="peer w-full pl-11 pr-10 pt-5 pb-2 bg-white/90 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition-all"
+                                required
+                            >
+                            <label for="telefono" class="absolute left-11 top-2 text-[11px] font-semibold text-indigo-600 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:text-slate-400 peer-focus:top-2 peer-focus:text-[11px] peer-focus:font-semibold peer-focus:text-indigo-600 pointer-events-none">
+                                Número de teléfono (Ej: 987654321)
+                            </label>
+                            <i class="fa-solid fa-phone absolute left-4 top-4 text-slate-400 peer-focus:text-indigo-600 transition-colors"></i>
+                            <i id="telefono-check" class="fa-solid fa-circle-check absolute right-3.5 top-4 text-emerald-500 hidden"></i>
+                        </div>
+                        <p id="telefono-error" class="mt-1.5 text-xs text-rose-500 hidden flex items-center gap-1">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Ingresa un número válido (7 a 15 dígitos)
+                        </p>
+                    </div>
+
+                    <!-- Campo: Correo -->
+                    <div class="relative group">
+                        <div class="relative">
+                            <input 
+                                type="email" 
+                                id="correo" 
+                                name="Correo"
+                                placeholder=" "
+                                class="peer w-full pl-11 pr-10 pt-5 pb-2 bg-white/90 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition-all"
+                                required
+                            >
+                            <label for="correo" class="absolute left-11 top-2 text-[11px] font-semibold text-indigo-600 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:text-slate-400 peer-focus:top-2 peer-focus:text-[11px] peer-focus:font-semibold peer-focus:text-indigo-600 pointer-events-none">
+                                Correo electrónico
+                            </label>
+                            <i class="fa-solid fa-envelope absolute left-4 top-4 text-slate-400 peer-focus:text-indigo-600 transition-colors"></i>
+                            <i id="correo-check" class="fa-solid fa-circle-check absolute right-3.5 top-4 text-emerald-500 hidden"></i>
+                        </div>
+                        <p id="correo-error" class="mt-1.5 text-xs text-rose-500 hidden flex items-center gap-1">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Ingresa un correo electrónico válido
+                        </p>
+                    </div>
+
+                    <!-- Campo: Comentario -->
+                    <div class="relative">
+                        <div class="relative">
+                            <textarea 
+                                id="comentario" 
+                                name="Comentario"
+                                rows="4"
+                                placeholder=" "
+                                class="peer w-full pl-11 pr-4 pt-6 pb-2 bg-white/90 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition-all resize-none"
+                                required
+                            ></textarea>
+                            <label for="comentario" class="absolute left-11 top-2 text-[11px] font-semibold text-indigo-600 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:text-slate-400 peer-focus:top-2 peer-focus:text-[11px] peer-focus:font-semibold peer-focus:text-indigo-600 pointer-events-none">
+                                Escribe tu comentario aquí...
+                            </label>
+                            <i class="fa-solid fa-comment-dots absolute left-4 top-4 text-slate-400 peer-focus:text-indigo-600 transition-colors"></i>
+                        </div>
+
+                        <!-- Barra de progreso de palabras -->
+                        <div class="mt-2">
+                            <div class="flex justify-between items-center text-xs mb-1">
+                                <span id="comentario-error" class="text-rose-500 hidden font-medium">
+                                    <i class="fa-solid fa-circle-info mr-1"></i>Mínimo 10 palabras
+                                </span>
+                                <span id="contador-texto" class="text-slate-400 ml-auto font-medium">0 / 10 palabras</span>
+                            </div>
+                            <div class="w-full bg-slate-200/80 rounded-full h-1.5 overflow-hidden">
+                                <div id="barra-progreso" class="bg-amber-400 h-1.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botón de envío -->
+                    <button 
+                        type="submit" 
+                        id="btn-enviar"
+                        class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold text-sm shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                        <span>Enviar mensaje</span>
+                        <i class="fa-solid fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i>
+                    </button>
+                </form>
+            </div>
+
+            <!-- VISTA 2: PANTALLA DE ÉXITO ANIMADA -->
+            <div id="success-container" class="hidden p-8 sm:p-12 text-center">
+                <svg class="checkmark mb-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                    <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                </svg>
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">¡Mensaje enviado!</h2>
+                <p class="text-slate-500 text-sm mb-8 max-w-xs mx-auto">
+                    Hemos recibido tus datos correctamente. Nos pondremos en contacto contigo muy pronto.
+                </p>
+                <button 
+                    type="button" 
+                    id="btn-nuevo-mensaje"
+                    class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-colors cursor-pointer"
+                >
+                    <i class="fa-solid fa-rotate-left"></i>
+                    Enviar otro comentario
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Pie de página -->
+        <p class="text-center text-xs text-slate-400 mt-5 flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-shield-halved text-indigo-400"></i>
+            Tus datos están protegidos y son confidenciales
+        </p>
+    </div>
+
+    <script>
+        // URL de tu Google Apps Script
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbym207XhnidHCd0aUjNK2Q82HS5OYzT9qgmgo6e8CwLCjOxUVVxCwzCLF2ivzu1madY/exec';
+
+        // Referencias del DOM
+        const form = document.getElementById('contactForm');
+        const formContainer = document.getElementById('form-container');
+        const successContainer = document.getElementById('success-container');
+        const btnNuevoMensaje = document.getElementById('btn-nuevo-mensaje');
+        
+        const nombre = document.getElementById('nombre');
+        const telefono = document.getElementById('telefono');
+        const correo = document.getElementById('correo');
+        const comentario = document.getElementById('comentario');
+        
+        const btnEnviar = document.getElementById('btn-enviar');
+        const errorBanner = document.getElementById('error-banner');
+        const errorBannerText = document.getElementById('error-banner-text');
+        const contadorTexto = document.getElementById('contador-texto');
+        const barraProgreso = document.getElementById('barra-progreso');
+
+        // Barra de progreso y contador de palabras
+        comentario.addEventListener('input', () => {
+            const palabras = comentario.value.trim().split(/\s+/).filter(p => p.length > 0);
+            const cantidad = palabras.length;
+            const porcentaje = Math.min((cantidad / 10) * 100, 100);
+            
+            contadorTexto.textContent = `${cantidad} / 10 palabras`;
+            barraProgreso.style.width = `${porcentaje}%`;
+
+            if (cantidad >= 10) {
+                barraProgreso.classList.remove('bg-amber-400');
+                barraProgreso.classList.add('bg-emerald-500');
+                contadorTexto.classList.remove('text-slate-400');
+                contadorTexto.classList.add('text-emerald-600');
+            } else {
+                barraProgreso.classList.add('bg-amber-400');
+                barraProgreso.classList.remove('bg-emerald-500');
+                contadorTexto.classList.add('text-slate-400');
+                contadorTexto.classList.remove('text-emerald-600');
+            }
+            validarComentario(false);
+        });
+
+        // Listeners de validación en vivo
+        nombre.addEventListener('input', () => validarNombre(false));
+        telefono.addEventListener('input', () => validarTelefono(false));
+        correo.addEventListener('input', () => validarCorreo(false));
+
+        function actualizarEstadoVisual(input, checkIcon, errorMsg, esValido, vacio, forzar) {
+            if (vacio && !forzar) {
+                input.classList.remove('input-error', 'input-success');
+                if (checkIcon) checkIcon.classList.add('hidden');
+                errorMsg.classList.add('hidden');
+                return false;
+            }
+            if (!esValido) {
+                input.classList.add('input-error');
+                input.classList.remove('input-success');
+                if (checkIcon) checkIcon.classList.add('hidden');
+                errorMsg.classList.remove('hidden');
+                return false;
+            }
+            input.classList.remove('input-error');
+            input.classList.add('input-success');
+            if (checkIcon) checkIcon.classList.remove('hidden');
+            errorMsg.classList.add('hidden');
+            return true;
+        }
+
+        function validarNombre(forzar = false) {
+            const valor = nombre.value.trim();
+            const regex = /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]{3,}$/;
+            return actualizarEstadoVisual(
+                nombre,
+                document.getElementById('nombre-check'),
+                document.getElementById('nombre-error'),
+                regex.test(valor),
+                valor === '',
+                forzar
+            );
+        }
+
+        function validarTelefono(forzar = false) {
+            const valor = telefono.value.trim();
+            // Acepta dígitos, espacios, guiones o signo + al inicio (ej: +51 987654321)
+            const soloDigitos = valor.replace(/\D/g, '');
+            const regexFormato = /^[+]?[0-9\s-]{7,18}$/;
+            const esValido = regexFormato.test(valor) && soloDigitos.length >= 7 && soloDigitos.length <= 15;
+            
+            return actualizarEstadoVisual(
+                telefono,
+                document.getElementById('telefono-check'),
+                document.getElementById('telefono-error'),
+                esValido,
+                valor === '',
+                forzar
+            );
+        }
+
+        function validarCorreo(forzar = false) {
+            const valor = correo.value.trim();
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return actualizarEstadoVisual(
+                correo,
+                document.getElementById('correo-check'),
+                document.getElementById('correo-error'),
+                regex.test(valor),
+                valor === '',
+                forzar
+            );
+        }
+
+        function validarComentario(forzar = false) {
+            const valor = comentario.value.trim();
+            const palabras = valor.split(/\s+/).filter(p => p.length > 0);
+            return actualizarEstadoVisual(
+                comentario,
+                null,
+                document.getElementById('comentario-error'),
+                palabras.length >= 10,
+                valor === '',
+                forzar
+            );
+        }
+
+        function mostrarErrorGeneral(texto) {
+            errorBannerText.textContent = texto;
+            errorBanner.classList.remove('hidden');
+            setTimeout(() => errorBanner.classList.add('hidden'), 5000);
+        }
+
+        // Envío del formulario
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorBanner.classList.add('hidden');
+
+            const v1 = validarNombre(true);
+            const v2 = validarTelefono(true);
+            const v3 = validarCorreo(true);
+            const v4 = validarComentario(true);
+
+            if (!v1 || !v2 || !v3 || !v4) {
+                mostrarErrorGeneral('Por favor completa correctamente todos los campos.');
+                return;
+            }
+
+            // Estado de carga en el botón
+            btnEnviar.disabled = true;
+            btnEnviar.classList.add('opacity-80', 'cursor-not-allowed');
+            btnEnviar.innerHTML = '<div class="spinner"></div> <span>Enviando...</span>';
+
+            const datos = {
+                nombre: nombre.value.trim(),
+                telefono: telefono.value.trim(),
+                correo: correo.value.trim(),
+                comentario: comentario.value.trim(),
+                destinatario: 'jheferhola@gmail.com'
+            };
+
+            try {
+                await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(datos)
+                });
+
+                // Transición suave a la pantalla de éxito
+                formContainer.classList.add('hidden');
+                successContainer.classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarErrorGeneral('Error de conexión. Verifica tu internet e inténtalo de nuevo.');
+            } finally {
+                btnEnviar.disabled = false;
+                btnEnviar.classList.remove('opacity-80', 'cursor-not-allowed');
+                btnEnviar.innerHTML = '<span>Enviar mensaje</span> <i class="fa-solid fa-arrow-right text-xs"></i>';
+            }
+        });
+
+        // Botón para volver a enviar otro mensaje
+        btnNuevoMensaje.addEventListener('click', () => {
+            form.reset();
+            contadorTexto.textContent = '0 / 10 palabras';
+            contadorTexto.classList.add('text-slate-400');
+            contadorTexto.classList.remove('text-emerald-600');
+            barraProgreso.style.width = '0%';
+            barraProgreso.classList.add('bg-amber-400');
+            barraProgreso.classList.remove('bg-emerald-500');
+            
+            [nombre, telefono, correo, comentario].forEach(el => el.classList.remove('input-success', 'input-error'));
+            ['nombre-check', 'telefono-check', 'correo-check'].forEach(id => document.getElementById(id).classList.add('hidden'));
+
+            successContainer.classList.add('hidden');
+            formContainer.classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>
